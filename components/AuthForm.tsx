@@ -9,12 +9,16 @@ import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import ImageUpload from "./ImageUpload";
 import { Button } from "./ui/button";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { Loader2 } from "lucide-react";
 
 interface AuthFormProps<T extends FieldValues> {
   type: "SIGN_IN" | "SIGN_UP"
   schema: ZodType<T>;
   defaultValues: T;
-  onSubmit: (data: T) => Promise<{success: boolean; error: boolean}>;
+  onSubmit: (data: T) => Promise<{success: boolean; error?: string}>;
 }
 
 const AuthForm = <T extends FieldValues>({
@@ -24,12 +28,36 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: AuthFormProps<T>) => {
   const isSignIn = type === 'SIGN_IN';
+  const [isPending, startTransition] = useTransition();
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
-  })
+    disabled: isPending,
+  });
 
-  const handleSubmit: SubmitHandler<T> = async (data) => {};
+  const router = useRouter();
+
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    startTransition(async () => {
+      const result = await onSubmit(data);
+      if (result.success) {
+        toast({
+          title: "Success",
+          description: isSignIn
+            ? "You have successfully signed in."
+            : "You have successfully signed up.",
+        });
+        router.push("/")
+      } else {
+        toast({
+          title: `Error ${isSignIn ? "signing in" : "signing up"}`,
+          description: result.error ?? "An error occurred.",
+          variant: "destructive",
+        });
+      }
+    })
+
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -42,7 +70,7 @@ const AuthForm = <T extends FieldValues>({
           : "Please complete all fields and upload a valid university ID to gain access to the library"}
       </p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         {Object.keys(defaultValues).map((field, index) => (
           <FormField
             key={index}
@@ -71,8 +99,13 @@ const AuthForm = <T extends FieldValues>({
           />
         ))}
 
-        <Button type="submit" className="form-btn">
-          {isSignIn ? "Sign In" : "Sign Up"}
+        <Button type="submit" className="form-btn" disabled={isPending}>
+          {isPending ? (
+            <>
+              <Loader2 className="size-4 mr-2 animate-spin"/>
+              Please Wait ...
+            </>
+          ) : (isSignIn ? "Sign In" : "Sign Up")}
         </Button>
         </form>
       </Form>
