@@ -7,6 +7,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
+import ImageUpload from "./ImageUpload";
 import { Button } from "./ui/button";
 
 interface AuthFormProps<T extends FieldValues> {
@@ -52,7 +53,7 @@ const AuthForm = <T extends FieldValues>({
                 <FormLabel className="capitalize">{FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}</FormLabel>
                 <FormControl>
                   {field.name === "universityCard" ? (
-                    <div>ImageUpload</div>
+                    <ImageUpload onFileChange={field.onChange}/>
                   ) : (
                     <Input 
                       required
