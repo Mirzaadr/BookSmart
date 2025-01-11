@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${ibmPlexSans.className} ${bebasNeue.className} antialiased`}
+        className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}
       >
         {children}
         <Toaster />
