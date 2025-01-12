@@ -32,20 +32,20 @@ export const signInWithCredentials = async (
 export const signUp = async (params: AuthCredentials) => {
   const { fullName, email, password, universityCard, universityId } = params;
 
-  // Check if useralready exist
-  const existingUser = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.email, email))
-    .limit(1);
-
-  if (existingUser.length > 0) {
-    return { success: false, error: "User already exists" };
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   try {
+    // Check if useralready exist
+    const existingUser = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.email, email))
+      .limit(1);
+
+    if (existingUser.length > 0) {
+      return { success: false, error: "User already exists" };
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     await db.insert(usersTable).values({
       fullName,
       email,
