@@ -15,6 +15,13 @@
       "when": 1736666961583,
       "tag": "0001_oval_night_thrasher",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1736677251525,
+      "tag": "0002_tiny_champions",
+      "breakpoints": true
     }
   ]
 }
