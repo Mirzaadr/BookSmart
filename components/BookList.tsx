@@ -12,6 +12,8 @@ const BookList = ({
   books,
   containerClassname,
 }: BookListProps) => {
+  if (books.length < 2) return;
+  
   return (
     <section className={cn(
       "",
