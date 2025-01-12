@@ -7,8 +7,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
-import ImageUpload from "./ImageUpload";
-import { Button } from "./ui/button";
+import ImageUpload from "@/components/FileUpload";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -32,7 +32,7 @@ const AuthForm = <T extends FieldValues>({
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
-    disabled: isPending,
+    // disabled: isPending,
   });
 
   const router = useRouter();
@@ -62,66 +62,81 @@ const AuthForm = <T extends FieldValues>({
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold text-white">
-        {isSignIn ? 'Welcome back to Bookwise' : 'Create your library account'}
+        {isSignIn ? "Welcome back to Bookwise" : "Create your library account"}
       </h1>
       <p className="text-light-100">
-        {isSignIn 
+        {isSignIn
           ? "Access the vast collection of resources, and stay updated"
           : "Please complete all fields and upload a valid university ID to gain access to the library"}
       </p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        {Object.keys(defaultValues).map((field, index) => (
-          <FormField
-            key={index}
-            control={form.control}
-            name={field as Path<T>}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="capitalize">{FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}</FormLabel>
-                <FormControl>
-                  {field.name === "universityCard" ? (
-                    <ImageUpload onFileChange={field.onChange}/>
-                  ) : (
-                    <Input 
-                      required
-                      type={
-                        FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
-                      } 
-                      {...field} 
-                      className="form-input"
-                    />
-                  )}
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="space-y-8 w-full"
+        >
+          {Object.keys(defaultValues).map((field, index) => (
+            <FormField
+              key={index}
+              control={form.control}
+              name={field as Path<T>}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="capitalize">
+                    {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
+                  </FormLabel>
+                  <FormControl>
+                    {field.name === "universityCard" ? (
+                      <ImageUpload
+                        type="image"
+                        accept="image/*"
+                        placeholder="Upload your ID"
+                        folder="ids"
+                        variant="dark"
+                        onFileChange={field.onChange}
+                      />
+                    ) : (
+                      <Input
+                        required
+                        type={
+                          FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
+                        }
+                        {...field}
+                        className="form-input"
+                      />
+                    )}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
 
-        <Button type="submit" className="form-btn" disabled={isPending}>
-          {isPending ? (
-            <>
-              <Loader2 className="size-4 mr-2 animate-spin"/>
-              Please Wait ...
-            </>
-          ) : (isSignIn ? "Sign In" : "Sign Up")}
-        </Button>
+          <Button type="submit" className="form-btn" disabled={isPending}>
+            {isPending ? (
+              <>
+                <Loader2 className="size-4 mr-2 animate-spin" />
+                Please Wait ...
+              </>
+            ) : isSignIn ? (
+              "Sign In"
+            ) : (
+              "Sign Up"
+            )}
+          </Button>
         </form>
       </Form>
 
-      
       <p className="text-center text-base font-medium">
-        {isSignIn ? 'New to Bookwise? ' : 'Already have an account? '}
-        <Link 
-          href={isSignIn ? '/sign-up' : '/sign-in'}
+        {isSignIn ? "New to Bookwise? " : "Already have an account? "}
+        <Link
+          href={isSignIn ? "/sign-up" : "/sign-in"}
           className="font-bold text-primary"
         >
-          {isSignIn ? 'Create an account' : 'Sign in'}
+          {isSignIn ? "Create an account" : "Sign in"}
         </Link>
       </p>
     </div>
-  )
+  );
 }
 
 export default AuthForm;
