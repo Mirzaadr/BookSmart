@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/database/drizzle";
-import { usersTable } from "@/database/schema";
+import { users } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { signIn } from "../auth";
@@ -36,8 +36,8 @@ export const signUp = async (params: AuthCredentials) => {
     // Check if useralready exist
     const existingUser = await db
       .select()
-      .from(usersTable)
-      .where(eq(usersTable.email, email))
+      .from(users)
+      .where(eq(users.email, email))
       .limit(1);
 
     if (existingUser.length > 0) {
@@ -46,7 +46,7 @@ export const signUp = async (params: AuthCredentials) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await db.insert(usersTable).values({
+    await db.insert(users).values({
       fullName,
       email,
       password: hashedPassword,
