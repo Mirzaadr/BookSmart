@@ -1,9 +1,7 @@
-import { db } from "@/database/drizzle";
-import { users } from "@/database/schema";
-import { eq } from "drizzle-orm";
 import { NextAuthConfig, User } from "next-auth";
 import bcrypt from "bcryptjs";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { db } from "./prisma";
 
 export default {
   session: {
@@ -16,23 +14,23 @@ export default {
           return null;
         }
 
-        const user = await db
-          .select()
-          .from(users)
-          .where(eq(users.email, credentials.email.toString()))
-          .limit(1);
+        const user = await db.user.findUnique({
+          where: { email: credentials.email.toString() },
+        });
 
-        if (user.length === 0) return null;
+        if (!user) return null;
 
         const isPasswordValid = await bcrypt.compare(
           credentials.password.toString(),
-          user[0].password
+          user.password
         );
 
+        if (!isPasswordValid) return null;
+
         return {
-          id: user[0].id.toString(),
-          email: user[0].email,
-          name: user[0].fullName,
+          id: user.id.toString(),
+          email: user.email,
+          name: user.fullName,
         } as User;
       },
     }),

@@ -1,17 +1,15 @@
 "use server";
 
-import { db } from "@/database/drizzle";
-import { books } from "@/database/schema";
+import { db } from "@/lib/prisma";
 
 export const createBook = async (params: BookParams) => {
   try {
-    const newBook = await db
-      .insert(books)
-      .values({
+    const newBook = await db.book.create({
+      data: {
         ...params,
         availableCopies: params.totalCopies,
-      })
-      .returning();
+      },
+    });
 
     return {
       success: true,
@@ -27,26 +25,26 @@ export const createBook = async (params: BookParams) => {
   }
 };
 
-export const updateBook = async (params: BookParams) => {
+export const updateBook = async (params: BookParams & { id: string }) => {
   try {
-    const newBook = await db
-      .insert(books)
-      .values({
+    const updatedBook = await db.book.update({
+      where: { id: params.id },
+      data: {
         ...params,
         availableCopies: params.totalCopies,
-      })
-      .returning();
+      },
+    });
 
     return {
       success: true,
-      data: JSON.parse(JSON.stringify(newBook)),
+      data: JSON.parse(JSON.stringify(updatedBook)),
     };
   } catch (error) {
     console.error(JSON.stringify(error));
 
     return {
       success: false,
-      error: "An error occured while creating the book",
+      error: "An error occured while Updating the book",
     };
   }
 };

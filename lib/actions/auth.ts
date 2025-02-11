@@ -1,10 +1,8 @@
 "use server";
 
-import { db } from "@/database/drizzle";
-import { users } from "@/database/schema";
-import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
-import { signIn } from "../auth";
+import { signIn } from "@/lib/auth";
+import { db } from "@/lib/prisma";
 
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, "email" | "password">
@@ -33,25 +31,24 @@ export const signUp = async (params: AuthCredentials) => {
   const { fullName, email, password, universityCard, universityId } = params;
 
   try {
-    // Check if useralready exist
-    const existingUser = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email))
-      .limit(1);
+    const existingUser = await db.user.findFirst({
+      where: { email },
+    });
 
-    if (existingUser.length > 0) {
+    if (!!existingUser) {
       return { success: false, error: "User already exists" };
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await db.insert(users).values({
-      fullName,
-      email,
-      password: hashedPassword,
-      universityId,
-      universityCard,
+    await db.user.create({
+      data: {
+        fullName,
+        email,
+        password: hashedPassword,
+        universityId,
+        universityCard,
+      },
     });
 
     await signInWithCredentials({

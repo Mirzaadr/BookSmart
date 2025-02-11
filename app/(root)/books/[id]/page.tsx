@@ -1,28 +1,27 @@
 import BookOverview from "@/components/BookOverview"
 import BookVideo from "@/components/BookVideo";
-import { db } from "@/database/drizzle";
-import { books } from "@/database/schema";
 import { auth } from "@/lib/auth";
-import { eq } from "drizzle-orm";
+import { db } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 
 const SingleBookPage = async ({
-  params
-}: { params: Promise<{ id:string }> }) => {
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   const session = await auth();
 
   if (!session?.user) redirect("/sign-in");
 
   const { id } = await params;
-  const [bookDetails] = await db.select().from(books).where(eq(books.id, id)).limit(1);
+  if (id.length < 32) return notFound();
+  // const [bookDetails] = await db.select().from(books).where(eq(books.id, id)).limit(1);
+  const bookDetails = await db.book.findUnique({ where: { id } });
 
   if (!bookDetails) return notFound();
   return (
     <>
-      <BookOverview
-        {...bookDetails}
-        userId={session.user.id as string}
-      />
+      <BookOverview {...bookDetails} userId={session.user.id as string} />
 
       <div className="book-details">
         <div className="flex-[1.5]">
@@ -42,7 +41,7 @@ const SingleBookPage = async ({
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default SingleBookPage;

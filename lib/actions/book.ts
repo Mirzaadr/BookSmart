@@ -1,20 +1,15 @@
 "use server";
-
-import { db } from "@/database/drizzle";
-import { books, borrowRecords } from "@/database/schema";
-import { eq } from "drizzle-orm";
+import { db } from "@/lib/prisma";
 
 export const borrowBook = async (params: BorrowBookParams) => {
   const { userId, bookId } = params;
 
   try {
-    const book = await db
-      .select({ availableCopies: books.availableCopies })
-      .from(books)
-      .where(eq(books.id, bookId))
-      .limit(1);
+    const book = await db.book.findUnique({
+      where: { id: bookId },
+    });
 
-    if (!book.length || book[0].availableCopies <= 0) {
+    if (!book || book.availableCopies <= 0) {
       return {
         success: false,
         error: "Book is not available for borrowing",
@@ -25,17 +20,21 @@ export const borrowBook = async (params: BorrowBookParams) => {
       new Date().setDate(new Date().getDate() + 7)
     ).toString();
 
-    const record = await db.insert(borrowRecords).values({
-      userId,
-      bookId,
-      dueDate,
-      status: "BORROWED",
+    const record = await db.borrowRecord.create({
+      data: {
+        userId,
+        bookId,
+        dueDate,
+        status: "BORROWED",
+      },
     });
 
-    await db
-      .update(books)
-      .set({ availableCopies: book[0].availableCopies - 1 })
-      .where(eq(books.id, bookId));
+    await db.book.update({
+      where: { id: bookId },
+      data: {
+        availableCopies: book.availableCopies - 1,
+      },
+    });
 
     return {
       success: true,

@@ -1,10 +1,10 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db } from "@/database/drizzle";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { db } from "./prisma";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db),
+  adapter: PrismaAdapter(db),
   ...authConfig,
   pages: {
     signIn: "/sign-in",
