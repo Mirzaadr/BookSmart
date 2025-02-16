@@ -15,20 +15,16 @@ const BookList = ({
   if (books.length < 2) return;
   
   return (
-    <section className={cn(
-      "",
-      containerClassname,
-    )}>
-
+    <section className={cn("", containerClassname)}>
       <h2 className="font-bebas-neue text-4xl text-light-100">{title}</h2>
 
-      <ul className="book-list">
+      <ul className="book-list justify-center md:justify-start">
         {books.map((book) => (
-          <BookCard key={book.id} {...book}/>
+          <BookCard key={book.id} {...book} />
         ))}
       </ul>
     </section>
-  )
+  );
 }
 
 export default BookList;
