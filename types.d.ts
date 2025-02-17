@@ -11,7 +11,38 @@ type Book = {
   coverUrl: string;
   videoUrl: string;
   summary: string;
+  createdAt?: Date | null;
+};
+
+type BorrowedBook = Book & {
   isLoanedBook?: boolean;
+  borrowDate?: Date;
+  dueDate?: Date;
+};
+
+type UserData = {
+  id: string;
+  fullName: string;
+  email: string;
+  universityId: number;
+  universityCard: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | null;
+  role: "USER" | "ADMIN";
+  createdAt: Date;
+  borrowRecords?: BorrowRecords[];
+};
+
+type BorrowRecords = {
+  id: string;
+  // userId: string,
+  // bookId: string,
+  borrowDate: Date;
+  dueDate: Date;
+  returnDate: Date;
+  status: "BORROWED" | "RETURNED";
+  createdAt: Date;
+  books?: Book;
+  users?: UserData;
 };
 
 interface AuthCredentials {

@@ -1,25 +1,40 @@
 import BookList from "@/components/BookList";
-import { Button } from "@/components/ui/button";
-import { sampleBooks } from "@/constants";
-import { signOut } from "@/lib/auth";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import ProfileCard from "./_components/ProfileCard";
 
-const ProfilePage = () => {
+const ProfilePage = async () => {
+  const session = await auth();
+  if (!session || !session.user?.id) {
+    return redirect("/sign-in");
+  }
+
+  const borrowedBooks: BorrowedBook[] = (
+    await db.borrowRecord.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      include: {
+        books: true,
+      },
+    })
+  ).map((borrowedBook) => ({
+    ...borrowedBook.books,
+    isLoanedBook: true,
+    dueDate: borrowedBook.dueDate,
+    borrowDate: borrowedBook.borrowDate,
+  }));
   return (
-    <>
-      <form 
-        action={async () => {
-          "use server"
-
-          await signOut();
-        }}
-        className="mb-10"
-      >
-        <Button>Logout</Button>
-      </form>
-
-      <BookList title="Borrowed Books" books={sampleBooks}/>
-    </>
-  )
-}
+    <div className="flex flex-col lg:flex-row gap-14">
+      <div className="w-full lg:w-[40%]">
+        <ProfileCard userId={session.user.id} />
+      </div>
+      <div className="w-full lg:w-[60%]">
+        <BookList title="Borrowed Books" books={borrowedBooks} />
+      </div>
+    </div>
+  );
+};
 
 export default ProfilePage;

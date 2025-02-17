@@ -1,9 +1,10 @@
 import Link from "next/link";
 import BookCover from "./BookCover";
-import { cn } from "@/lib/utils";
+import { cn, calculateDueDays } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
+import { BookOpenTextIcon, Calendar, ReceiptText } from "lucide-react";
 
 const BookCard = ({
   id,
@@ -12,41 +13,81 @@ const BookCard = ({
   // rating,
   coverColor,
   coverUrl,
+  borrowDate,
+  dueDate,
   isLoanedBook = false,
-}: Book) => {
+}: Book & BorrowedBook) => {
   return (
-    <li className={cn(isLoanedBook && "xs:w-52 w-full")}>
+    <li className={cn(isLoanedBook && "borrowed-book")}>
       <Link
         href={`/books/${id}`}
         className={cn(isLoanedBook && "w-full flex flex-col items-center")}
       >
-        <BookCover coverColor={coverColor} coverImage={coverUrl} />
+        <div
+          className={cn("", isLoanedBook && "borrowed-book_cover")}
+          style={isLoanedBook ? { backgroundColor: coverColor + "4D" } : {}}
+        >
+          <BookCover
+            coverColor={coverColor}
+            coverImage={coverUrl}
+            variant={isLoanedBook ? "medium" : "regular"}
+          />
+        </div>
 
-        <div className={cn("mt-4", !isLoanedBook && "xs:max-w-40 max-w-28")}>
+        <div
+          className={cn("mt-4 w-full", !isLoanedBook && "xs:max-w-40 max-w-28")}
+        >
           <p className="book-title" title={title}>
             {title}
           </p>
           <p className="book-genre">{genre}</p>
         </div>
 
-        {isLoanedBook && (
-          <div className="mt-3 w-full">
-            <div className="book-loaned">
-              <Image
-                src="/icons/calendar/svg"
-                alt="calendar"
-                width={18}
-                height={18}
-                className="object-contain"
-              />
-              <p className="text-light-100">11 days to return</p>
-            </div>
-
-            <Button className="book-btn">Download Receipt</Button>
-          </div>
+        {isLoanedBook && borrowDate && dueDate && (
+          <BorrowInfo borrowDate={borrowDate} dueDate={dueDate} />
         )}
       </Link>
     </li>
+  );
+};
+
+const BorrowInfo = ({
+  borrowDate,
+  dueDate,
+}: {
+  borrowDate: Date;
+  dueDate: Date;
+}) => {
+  const dueDays = calculateDueDays(dueDate);
+  return (
+    <>
+      <div className="mt-3 w-full flex justify-between">
+        <div className="book-loaned">
+          <BookOpenTextIcon size={18} className="text-primary" />
+          <p className="text-light-100">
+            Borrowed on{" "}
+            {new Intl.DateTimeFormat("en-US", {
+              month: "short",
+              day: "numeric",
+            }).format(borrowDate)}
+          </p>
+        </div>
+      </div>
+      <div className="mt-2 w-full flex justify-between">
+        <div className="book-loaned">
+          <Calendar size={18} className="text-primary" />
+          <p className="text-light-100">
+            {dueDays > 0
+              ? `${dueDays} days to return`
+              : `Overdue by ${Math.abs(dueDays)} days`}
+          </p>
+        </div>
+
+        <Button className="book-btn" size={"icon"}>
+          <ReceiptText />
+        </Button>
+      </div>
+    </>
   );
 };
 

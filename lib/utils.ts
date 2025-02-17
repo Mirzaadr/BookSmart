@@ -12,3 +12,10 @@ export const getInitials = (name: string) =>
     .join("")
     .toUpperCase()
     .slice(0, 2);
+
+export const calculateDueDays = (dueDate: Date) => {
+  const currentDate = new Date();
+  const diff = dueDate.getTime() - currentDate.getTime();
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  return days;
+};

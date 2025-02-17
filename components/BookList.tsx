@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 import BookCard from "./BookCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BookListProps {
   title?: string;
-  books: Book[];
+  books: Book[] | BorrowedBook[];
   containerClassname?: string;
 }
 
@@ -29,8 +30,10 @@ BookList.Skeleton = function BookListSkeleton({
 }: Omit<BookListProps, "books">) {
   return (
     <section className={cn("", containerClassname)}>
-      {title && (
+      {title ? (
         <h2 className="font-bebas-neue text-4xl text-light-100">{title}</h2>
+      ) : (
+        <Skeleton className="w-40 h-10 " />
       )}
       <ul className="book-list justify-center md:justify-start">
         {[...Array(12).keys()].map((i) => (
