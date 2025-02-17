@@ -5,13 +5,14 @@ import BorrowBook from "./BorrowBook";
 import { db } from "@/lib/prisma";
 import Link from "next/link";
 import { Skeleton } from "./ui/skeleton";
+import Markdown from "./Markdown";
 
 const BookOverview = async ({
   id,
   title,
   author,
   genre,
-  // rating,
+  rating,
   totalCopies,
   availableCopies,
   description,
@@ -35,9 +36,12 @@ const BookOverview = async ({
       <div className="flex flex-1 flex-col gap-5">
         <h1>{title}</h1>
 
-        <div className="book-info">
-          <p>
-            By <span className="font-semibold text-light-200">{author}</span>
+        <div className="book-info max-w-full overflow-auto">
+          <p className="text-wrap">
+            By{" "}
+            <span className="font-semibold text-light-200 max-w-[250px] truncate text-wrap">
+              {author}
+            </span>
           </p>
           <p>
             Category{" "}
@@ -46,6 +50,7 @@ const BookOverview = async ({
 
           <div className="flex flex-row gap-1">
             <Image src="/icons/star.svg" alt="star" width={22} height={22} />
+            <p>{rating}</p>
           </div>
         </div>
 
@@ -59,9 +64,14 @@ const BookOverview = async ({
         </div>
 
         {fullDescription ? (
-          <p className="book-description">{description}</p>
+          // <p className="book-description text-wrap max-w-[625px]">
+          //   {description}
+          // </p>
+          <Markdown className="book-description text-wrap max-w-[625px]">
+            {description}
+          </Markdown>
         ) : (
-          <p className="book-description">
+          <p className="book-description text-wrap">
             {description.slice(0, 315)}
             {description.length > 315 && "... "}
             {description.length > 315 && (

@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import BookList from "../../library/_components/BookList";
+import Markdown from "react-markdown";
 
 const SingleBookPage = async ({
   params,
@@ -37,11 +38,9 @@ const SingleBookPage = async ({
           <section className="mt-10 flex flex-col gap-7">
             <h3>Summary</h3>
 
-            <div className="space-y-5 text-xl text-light-100">
-              {bookDetails.summary.split("\n").map((line, idx) => (
-                <p key={idx}>{line}</p>
-              ))}
-            </div>
+            <Markdown className="space-y-5 text-xl text-light-100">
+              {bookDetails.summary}
+            </Markdown>
           </section>
         </div>
         <div className="flex-1">
