@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import BookCover from "@/components/BookCover";
 import BorrowBook from "./BorrowBook";
 import { db } from "@/lib/prisma";
+import Link from "next/link";
+import { Skeleton } from "./ui/skeleton";
 
 const BookOverview = async ({
   id,
@@ -16,7 +18,8 @@ const BookOverview = async ({
   coverColor,
   coverUrl,
   userId,
-}: Book & { userId: string }) => {
+  fullDescription,
+}: Book & { userId: string; fullDescription?: boolean }) => {
   // const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
   const user = await db.user.findUnique({ where: { id: userId } });
 
@@ -55,7 +58,20 @@ const BookOverview = async ({
           </p>
         </div>
 
-        <p className="book-description">{description}</p>
+        {fullDescription ? (
+          <p className="book-description">{description}</p>
+        ) : (
+          <p className="book-description">
+            {description.slice(0, 315)}
+            {description.length > 315 && "... "}
+            {description.length > 315 && (
+              <span className="text-xl text-primary-500 cursor-pointer w-[150px] text-right hover:underline text-blue-100">
+                <Link href={`/books/${id}`}>Read More</Link>
+              </span>
+            )}
+          </p>
+        )}
+        {/* <ReadMore>{description}</ReadMore> */}
 
         {!user && (
           <BorrowBook
@@ -82,6 +98,35 @@ const BookOverview = async ({
               coverImage={coverUrl}
             />
           </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+BookOverview.Skeleton = function BookOverviewSkeleton() {
+  return (
+    <section className="book-overview">
+      <div className="flex flex-1 flex-col gap-5">
+        <Skeleton className="h-8 w-4/5" />
+
+        <div className="book-info">
+          <Skeleton className="h-5 w-[30%]" />
+          <Skeleton className="h-5 w-[25%]" />
+
+          <Skeleton className="h-[22px] w-[22px] rounded-full" />
+        </div>
+
+        <div className="book-copies">
+          <Skeleton className="h-5 w-[25%]" />
+          <Skeleton className="h-5 w-[30%]" />
+        </div>
+        <Skeleton className="h-[130px] w-full mt-2" />
+      </div>
+
+      <div className="relative flex flex-1 justify-center">
+        <div className="relative">
+          <Skeleton className="book-cover_wide z-10" />
         </div>
       </div>
     </section>
