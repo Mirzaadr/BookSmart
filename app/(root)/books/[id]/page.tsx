@@ -5,6 +5,7 @@ import { db } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import BookList from "../../library/_components/BookList";
 import Markdown from "react-markdown";
+import { Suspense } from "react";
 
 const SingleBookPage = async ({
   params,
@@ -46,16 +47,18 @@ const SingleBookPage = async ({
         <div className="flex-1">
           <h3>More Books</h3>
 
-          <BookList
-            query={{
-              OR: [
-                { author: bookDetails.author },
-                { genre: bookDetails.genre },
-              ],
-              NOT: { id },
-            }}
-            pageSize={6}
-          />
+          <Suspense fallback={<BookList.Skeleton pageSize={6} />}>
+            <BookList
+              query={{
+                OR: [
+                  { author: bookDetails.author },
+                  { genre: bookDetails.genre },
+                ],
+                NOT: { id },
+              }}
+              pageSize={6}
+            />
+          </Suspense>
         </div>
       </div>
     </>

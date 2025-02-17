@@ -1,9 +1,6 @@
 import BookOverview from "@/components/BookOverview";
-import BookVideo from "@/components/BookVideo";
 import { Skeleton } from "@/components/ui/skeleton";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/prisma";
-import { notFound, redirect } from "next/navigation";
+import BookList from "../../library/_components/BookList";
 
 const LoadingSingleBookPage = () => {
   return (
@@ -11,7 +8,7 @@ const LoadingSingleBookPage = () => {
       <BookOverview.Skeleton />
 
       <div className="book-details">
-        <div className="flex-[1.5]">
+        <div className="flex-1">
           <section className="flex flex-col gap-7">
             <h3>Video</h3>
             <Skeleton className="h-[300px]" />
@@ -23,6 +20,10 @@ const LoadingSingleBookPage = () => {
               <Skeleton className="h-[500px]" />
             </div>
           </section>
+        </div>
+        <div className="flex-1">
+          <h3>More Books</h3>
+          <BookList.Skeleton pageSize={6} />
         </div>
       </div>
     </>

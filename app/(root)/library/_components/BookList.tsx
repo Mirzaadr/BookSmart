@@ -57,10 +57,10 @@ const BookList = async ({
   );
 };
 
-BookList.Skeleton = function BookListSkeleton() {
+BookList.Skeleton = function BookListSkeleton({ pageSize = 12 }) {
   return (
     <ul className="book-list justify-center md:justify-start">
-      {[...Array(12).keys()].map((i) => (
+      {[...Array(pageSize).keys()].map((i) => (
         <BookCard.Skeleton key={i} />
       ))}
     </ul>
