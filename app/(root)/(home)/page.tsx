@@ -12,7 +12,7 @@ const RootPage = async () => {
   // const latestBooks = await db.select().from(books).limit(10).orderBy(desc(books.createdAt)) as Book[];
   const latestBooks = (await db.book.findMany({
     take: 10,
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: "asc" },
   })) as Book[];
   return (
     <>
