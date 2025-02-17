@@ -5,21 +5,23 @@ import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 const BookList = async ({
-  page,
   query,
   orderBy,
+  page = 1,
+  pageSize = 12,
 }: {
-  page: number;
+  page?: number;
   query?: Prisma.BookWhereInput;
   orderBy?:
     | Prisma.BookOrderByWithRelationInput
     | Prisma.BookOrderByWithRelationInput[];
+  pageSize?: number;
 }) => {
   const books = await db.book.findMany({
     where: query,
     orderBy,
-    take: 12,
-    skip: 12 * (page - 1),
+    take: pageSize,
+    skip: pageSize * (page - 1),
   });
 
   if (books.length === 0) {

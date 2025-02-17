@@ -3,6 +3,7 @@ import BookVideo from "@/components/BookVideo";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
+import BookList from "../../library/_components/BookList";
 
 const SingleBookPage = async ({
   params,
@@ -28,7 +29,7 @@ const SingleBookPage = async ({
       />
 
       <div className="book-details">
-        <div className="flex-[1.5]">
+        <div className="flex-1">
           <section className="flex flex-col gap-7">
             <h3>Video</h3>
             <BookVideo videoUrl={bookDetails.videoUrl} />
@@ -42,6 +43,20 @@ const SingleBookPage = async ({
               ))}
             </div>
           </section>
+        </div>
+        <div className="flex-1">
+          <h3>More Books</h3>
+
+          <BookList
+            query={{
+              OR: [
+                { author: bookDetails.author },
+                { genre: bookDetails.genre },
+              ],
+              NOT: { id },
+            }}
+            pageSize={6}
+          />
         </div>
       </div>
     </>
