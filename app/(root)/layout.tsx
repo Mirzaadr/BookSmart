@@ -8,8 +8,8 @@ const Layout = async ({
   const session = await auth();
   if (!session) redirect("/sign-in");
   return (
-    <main className="root-container">
-      <div className="mx-auto max-w-7xl w-full min-w-[360px]">
+    <main className="root-container min-w-[360px]">
+      <div className="mx-auto max-w-7xl w-full ">
         <Header session={session} />
         <div className="md:mt-20 pb-20">{children}</div>
       </div>
