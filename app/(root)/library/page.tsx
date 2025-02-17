@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import SortOption from "./_components/SortOption";
 import SearchInput from "./_components/SearchInput";
 import { Suspense } from "react";
-import BookResults from "@/components/BookResults";
+import BookList from "./_components/BookList";
 
 const LibraryPage = async ({
   searchParams,
@@ -84,9 +84,9 @@ const LibraryPage = async ({
 
         <Suspense
           key={`${page}${sortBy}${search}`}
-          fallback={<BookResults.Skeleton />}
+          fallback={<BookList.Skeleton />}
         >
-          <BookResults page={p} query={query} orderBy={orderBy} />
+          <BookList page={p} query={query} orderBy={orderBy} />
         </Suspense>
         <Pagination page={p} count={count} />
       </section>
