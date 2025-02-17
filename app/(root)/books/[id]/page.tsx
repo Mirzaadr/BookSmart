@@ -21,7 +21,11 @@ const SingleBookPage = async ({
   if (!bookDetails) return notFound();
   return (
     <>
-      <BookOverview {...bookDetails} userId={session.user.id as string} />
+      <BookOverview
+        {...bookDetails}
+        userId={session.user.id as string}
+        fullDescription
+      />
 
       <div className="book-details">
         <div className="flex-[1.5]">
