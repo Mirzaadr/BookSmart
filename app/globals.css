@@ -114,7 +114,7 @@
   }
 
   .book-description {
-    @apply mt-2 text-justify text-xl text-light-100;
+    @apply mt-2 text-justify text-xl text-light-100 break-words;
   }
 
   .book-overview_btn {
@@ -223,6 +223,7 @@
   .select-item {
     @apply focus:bg-dark-600 focus:text-light-100 !important;
   }
+  
 }
 
 @layer utilities {
