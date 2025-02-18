@@ -11,14 +11,14 @@ import ImageUpload from "@/components/FileUpload";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useMemo, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 
 interface AuthFormProps<T extends FieldValues> {
-  type: "SIGN_IN" | "SIGN_UP"
+  type: "SIGN_IN" | "SIGN_UP";
   schema: ZodType<T>;
   defaultValues: T;
-  onSubmit: (data: T) => Promise<{success: boolean; error?: string}>;
+  onSubmit: (data: T) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthForm = <T extends FieldValues>({
@@ -27,7 +27,7 @@ const AuthForm = <T extends FieldValues>({
   defaultValues,
   onSubmit,
 }: AuthFormProps<T>) => {
-  const isSignIn = type === 'SIGN_IN';
+  const isSignIn = useMemo(() => type === "SIGN_IN", [type]);
   const [isPending, startTransition] = useTransition();
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
@@ -47,7 +47,7 @@ const AuthForm = <T extends FieldValues>({
             ? "You have successfully signed in."
             : "You have successfully signed up.",
         });
-        router.push("/")
+        router.push("/");
       } else {
         toast({
           title: `Error ${isSignIn ? "signing in" : "signing up"}`,
@@ -55,8 +55,7 @@ const AuthForm = <T extends FieldValues>({
           variant: "destructive",
         });
       }
-    })
-
+    });
   };
 
   return (
@@ -137,6 +136,6 @@ const AuthForm = <T extends FieldValues>({
       </p>
     </div>
   );
-}
+};
 
 export default AuthForm;
