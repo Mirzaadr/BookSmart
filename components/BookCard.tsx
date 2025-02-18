@@ -1,10 +1,8 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import BookCover from "./BookCover";
-import { cn, calculateDueDays } from "@/lib/utils";
-import Image from "next/image";
-import { Button } from "./ui/button";
+import BorrowInfo from "./BorrowInfo";
 import { Skeleton } from "./ui/skeleton";
-import { BookOpenTextIcon, Calendar, ReceiptText } from "lucide-react";
 
 const BookCard = ({
   id,
@@ -48,46 +46,6 @@ const BookCard = ({
         )}
       </Link>
     </li>
-  );
-};
-
-const BorrowInfo = ({
-  borrowDate,
-  dueDate,
-}: {
-  borrowDate: Date;
-  dueDate: Date;
-}) => {
-  const dueDays = calculateDueDays(dueDate);
-  return (
-    <>
-      <div className="mt-3 w-full flex justify-between">
-        <div className="book-loaned">
-          <BookOpenTextIcon size={18} className="text-primary" />
-          <p className="text-light-100">
-            Borrowed on{" "}
-            {new Intl.DateTimeFormat("en-US", {
-              month: "short",
-              day: "numeric",
-            }).format(borrowDate)}
-          </p>
-        </div>
-      </div>
-      <div className="mt-2 w-full flex justify-between">
-        <div className="book-loaned">
-          <Calendar size={18} className="text-primary" />
-          <p className="text-light-100">
-            {dueDays > 0
-              ? `${dueDays} days to return`
-              : `Overdue by ${Math.abs(dueDays)} days`}
-          </p>
-        </div>
-
-        <Button className="book-btn" size={"icon"}>
-          <ReceiptText />
-        </Button>
-      </div>
-    </>
   );
 };
 
