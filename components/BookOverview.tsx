@@ -83,7 +83,7 @@ const BookOverview = async ({
         )}
         {/* <ReadMore>{description}</ReadMore> */}
 
-        {!user && (
+        {user && (
           <BorrowBook
             bookId={id.toString()}
             userId={userId}
@@ -117,7 +117,7 @@ const BookOverview = async ({
 BookOverview.Skeleton = function BookOverviewSkeleton() {
   return (
     <section className="book-overview">
-      <div className="flex flex-1 flex-col gap-5">
+      <div className="flex flex-1 flex-col gap-5 w-full">
         <Skeleton className="h-8 w-4/5" />
 
         <div className="book-info">
