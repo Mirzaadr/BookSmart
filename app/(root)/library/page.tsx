@@ -7,6 +7,7 @@ import SortOption from "./_components/SortOption";
 import SearchInput from "./_components/SearchInput";
 import { Suspense } from "react";
 import BookList from "./_components/BookList";
+import { Button } from "@/components/ui/button";
 
 const LibraryPage = async ({
   searchParams,
@@ -86,7 +87,32 @@ const LibraryPage = async ({
           key={`${page}${sortBy}${search}`}
           fallback={<BookList.Skeleton />}
         >
-          <BookList page={p} query={query} orderBy={orderBy} />
+          <BookList
+            page={p}
+            query={query}
+            orderBy={orderBy}
+            emptyPage={
+              <ul className="book-list justify-center items-center min-h-[331px] md:min-h-[662px]">
+                <li id="not-found">
+                  <h4>No Results found</h4>
+                  <p>
+                    We couldn&apos;t find anybooks matching your search.
+                    <br />
+                    Try using different keywords or titles
+                  </p>
+                  <Button
+                    onClick={async () => {
+                      "use server";
+                      redirect("/library");
+                    }}
+                    className="not-found-btn"
+                  >
+                    Clear Search
+                  </Button>
+                </li>
+              </ul>
+            }
+          />
         </Suspense>
         <Pagination page={p} count={count} />
       </section>
