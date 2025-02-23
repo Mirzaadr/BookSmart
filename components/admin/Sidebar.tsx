@@ -7,6 +7,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Session } from "next-auth";
+import { Button } from "../ui/button";
+import { LogOutIcon } from "lucide-react";
 
 const Sidebar = ({ session }: { session: Session }) => {
   const pathName = usePathname();
@@ -51,7 +53,7 @@ const Sidebar = ({ session }: { session: Session }) => {
                     />
                   </div>
 
-                  <p className={cn(isSelected ? "text-white": "text-dark")}>
+                  <p className={cn(isSelected ? "text-white" : "text-dark")}>
                     {link.text}
                   </p>
                 </div>
@@ -61,18 +63,28 @@ const Sidebar = ({ session }: { session: Session }) => {
         </div>
       </div>
 
-      <div className="user">
+      <div className="user items-center">
         <Avatar>
-          <AvatarFallback className="bg-amber-100">{getInitials(session.user?.name || "IN")}</AvatarFallback>
+          <AvatarFallback className="bg-amber-100">
+            {getInitials(session.user?.name || "IN")}
+          </AvatarFallback>
         </Avatar>
 
-        <div className="flex flex-col max-md:hidden">
+        <div className="flex flex-col max-md:hidden grow">
           <p className="font-semibold text-dark-200">{session.user?.name}</p>
           <p className="text-xs text-light-500">{session.user?.email}</p>
         </div>
+
+        <Button
+          size="icon"
+          variant="ghost"
+          className="size-8 rounded-[20px] max-md:hidden"
+        >
+          <LogOutIcon className="text-red-800" />
+        </Button>
       </div>
     </div>
   );
-}
+};
 
 export default Sidebar;
