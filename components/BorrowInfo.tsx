@@ -3,15 +3,19 @@
 import { calculateDueDays } from "@/lib/utils";
 import { BookOpenTextIcon, Calendar, ReceiptText } from "lucide-react";
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
 const BorrowInfo = ({
+  receiptId,
   borrowDate,
   dueDate,
 }: {
+  receiptId: string;
   borrowDate: Date;
   dueDate: Date;
 }) => {
   const dueDays = calculateDueDays(dueDate);
+  const router = useRouter();
   return (
     <>
       <div className="mt-3 w-full flex justify-between">
@@ -43,6 +47,7 @@ const BorrowInfo = ({
             e.preventDefault();
             e.stopPropagation();
             console.log("Receipt clicked");
+            router.push(`/receipt/${receiptId}`);
           }}
         >
           <ReceiptText />

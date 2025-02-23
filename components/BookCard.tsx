@@ -13,6 +13,7 @@ const BookCard = ({
   coverUrl,
   borrowDate,
   dueDate,
+  receiptId,
   isLoanedBook = false,
 }: Book & BorrowedBook) => {
   return (
@@ -42,7 +43,11 @@ const BookCard = ({
         </div>
 
         {isLoanedBook && borrowDate && dueDate && (
-          <BorrowInfo borrowDate={borrowDate} dueDate={dueDate} />
+          <BorrowInfo
+            borrowDate={borrowDate}
+            dueDate={dueDate}
+            receiptId={receiptId || ""}
+          />
         )}
       </Link>
     </li>

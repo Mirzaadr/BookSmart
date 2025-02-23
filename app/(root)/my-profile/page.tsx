@@ -21,6 +21,7 @@ const ProfilePage = async () => {
     })
   ).map((borrowedBook) => ({
     ...borrowedBook.books,
+    receiptId: borrowedBook.id,
     isLoanedBook: true,
     dueDate: borrowedBook.dueDate,
     borrowDate: borrowedBook.borrowDate,

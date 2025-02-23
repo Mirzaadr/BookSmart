@@ -15,6 +15,7 @@ type Book = {
 };
 
 type BorrowedBook = Book & {
+  receiptId?: string;
   isLoanedBook?: boolean;
   borrowDate?: Date;
   dueDate?: Date;
@@ -38,9 +39,9 @@ type BorrowRecords = {
   // bookId: string,
   borrowDate: Date;
   dueDate: Date;
-  returnDate: Date;
+  returnDate: Date | null;
   status: "BORROWED" | "RETURNED";
-  createdAt: Date;
+  createdAt: Date | null;
   books?: Book;
   users?: UserData;
 };
@@ -70,3 +71,4 @@ interface BorrowBookParams {
   bookId: string;
   userId: string;
 }
+
