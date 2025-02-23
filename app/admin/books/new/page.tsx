@@ -1,19 +1,16 @@
+import BackButton from "@/components/admin/BackButton";
 import BookForm from "@/components/admin/forms/BookForm";
-import { Button } from "@/components/ui/button"
-import Link from "next/link";
 
 const NewBookPage = () => {
   return (
     <>
-      <Button asChild className="back-btn">
-        <Link href="/admin/books">Go Back</Link>
-      </Button>
+      <BackButton />
 
       <section className="w-full max-w-2xl">
         <BookForm />
       </section>
     </>
-  )
-}
+  );
+};
 
 export default NewBookPage;
