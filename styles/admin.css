@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+.scroller {
+  --scrollbar-color-thumb: #f43f5e;
+  --scrollbar-color-track: #161C22;
+  --scrollbar-width: thin;
+  --scrollbar-width-legacy: 8px;
+  @apply pr-2;
+}
+
+
+/* Modern browsers with `scrollbar-*` support */
+@supports (scrollbar-width: auto) {
+  .scroller {
+      /* scrollbar-color: var(--primary-admin) var(--scrollbar-color-track); */
+      scrollbar-width: var(--scrollbar-width);
+    }
+}
+
+/* Legacy browsers with `::-webkit-scrollbar-*` support */
+@supports selector(::-webkit-scrollbar) {
+  /* .scroller::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-color-thumb);
+  }
+  .scroller::-webkit-scrollbar-track {
+    background: var(--scrollbar-color-track);
+  } */
+  .scroller::-webkit-scrollbar {
+    max-width: var(--scrollbar-width-legacy);
+    max-height: var(--scrollbar-width-legacy);
+  }
+}
+
 @layer components {
   .admin-container {
     @apply flex w-[calc(100%-264px)] flex-1 flex-col bg-light-300 p-5 xs:p-10;
@@ -17,11 +48,11 @@
   }
 
   .confirm-approve {
-    @apply bg-green-100 text-green-800 hover:bg-green-100/70 !important;
+    @apply bg-green-100 text-green-800 hover:bg-green-100/70  hover:text-green-800/70 !important;
   }
 
   .confirm-reject {
-    @apply bg-red-100 text-red-800 hover:bg-red-100/70 !important;
+    @apply bg-red-100 text-red-800 hover:bg-red-100/70 hover:text-red-800/70 !important;
   }
 
   .confirm-content {
@@ -68,7 +99,7 @@
 
   /* Statistics */
   .stat {
-    @apply bg-white rounded-xl p-5 space-y-5 flex-1;
+    @apply bg-white rounded-xl p-5 space-y-5 lg:flex-1;
   }
 
   .stat-info {
@@ -76,11 +107,18 @@
   }
 
   .stat-label {
-    @apply font-medium text-base text-light-500 whitespace-nowrap;
+    @apply font-medium text-base text-light-500 whitespace-nowrap truncate;
+    @supports (scrollbar-width: auto) {
+      scrollbar-width: thin;
+    }
   }
 
   .stat-count {
     @apply font-semibold text-3xl text-dark-400;
+  }
+
+  .stat-list {
+    @apply flex flex-col gap-2 h-[calc(100%-56px)] overflow-y-auto scroll-m-1 scroller;
   }
 
   /* Book Stripe */
