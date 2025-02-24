@@ -34,9 +34,11 @@ const FormField = <
 >({
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
+  // See https://github.com/orgs/react-hook-form/discussions/10964#discussioncomment-8481087
+  const disabled = (props.disabled || undefined) as boolean;
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller {...props} />
+      <Controller {...props} disabled={disabled}/>
     </FormFieldContext.Provider>
   )
 }
