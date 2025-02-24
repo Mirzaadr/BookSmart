@@ -17,8 +17,8 @@ export const borrowBook = async (params: BorrowBookParams) => {
     }
 
     const dueDate = new Date(
-      new Date().setDate(new Date().getDate() + 7)
-    ).toString();
+      new Date().setDate(new Date().getDate() + 30)
+    ).toISOString();
 
     const record = await db.borrowRecord.create({
       data: {
@@ -38,7 +38,7 @@ export const borrowBook = async (params: BorrowBookParams) => {
 
     return {
       success: true,
-      data: JSON.parse(JSON.stringify(record)),
+      data: record,
     };
   } catch (error) {
     console.error(JSON.stringify(error));
