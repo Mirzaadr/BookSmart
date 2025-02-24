@@ -4,6 +4,8 @@ import "@/styles/admin.css";
 import Sidebar from "@/components/admin/Sidebar";
 import Header from "@/components/admin/Header";
 import { db } from "@/lib/prisma";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const session = await auth();
