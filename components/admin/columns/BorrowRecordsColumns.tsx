@@ -1,12 +1,19 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import { ReceiptText, Trash2 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
 import BookCover from "@/components/BookCover";
 import GenerateReceiptButton from "@/components/GenerateReceiptButton";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { getInitials } from "@/lib/utils";
+import { BorrowStatus } from "@prisma/client";
+import { ColumnDef } from "@tanstack/react-table";
+import { ReceiptText } from "lucide-react";
 
 export const columns: ColumnDef<BorrowRecords>[] = [
   {
@@ -95,15 +102,34 @@ export const columns: ColumnDef<BorrowRecords>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <span
-        className={`px-2 py-1 rounded-full text-xs font-semibold w-[100px] inline-block text-center ${
-          row.original.status === "RETURNED"
-            ? "bg-green-100 text-green-500"
-            : "bg-yellow-100 text-yellow-500"
-        }`}
-      >
-        {row.original.status}
-      </span>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-semibold w-[100px] inline-block text-center ${
+              row.original.status === "RETURNED"
+                ? "bg-green-100 text-green-500"
+                : "bg-yellow-100 text-yellow-500"
+            }`}
+          >
+            {row.original.status}
+          </span>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-40" align="end">
+          {Object.keys(BorrowStatus).map((key, idx) => (
+            <DropdownMenuItem key={idx}>
+              <span
+                className={`px-2 py-1 rounded-full text-xs font-semibold w-[100px] inline-block text-center ${
+                  key === "RETURNED"
+                    ? "bg-green-100 text-green-500"
+                    : "bg-yellow-100 text-yellow-500"
+                }`}
+              >
+                {key}
+              </span>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     ),
   },
   {
