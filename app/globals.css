@@ -151,7 +151,7 @@
 
   /* Book Ticket */
   #book-ticket {
-    @apply relative mt-10 w-[544px] overflow-hidden bg-dark-300 py-8;
+    @apply relative w-[544px] overflow-hidden bg-dark-300 py-8;
   }
 
   #book-ticket #book-details div {
