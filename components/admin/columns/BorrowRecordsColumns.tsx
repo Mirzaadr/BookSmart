@@ -6,6 +6,7 @@ import { ReceiptText, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import BookCover from "@/components/BookCover";
+import GenerateReceiptButton from "@/components/GenerateReceiptButton";
 
 export const columns: ColumnDef<BorrowRecords>[] = [
   {
@@ -110,15 +111,17 @@ export const columns: ColumnDef<BorrowRecords>[] = [
     header: "Receipt",
     cell: ({ row }) => (
       <div className="flex [_&svg]:size-5">
-        <Button
-          // variant="ghost"
-          size="sm"
-          className="gap-2 book-receipt_admin-btn"
-          onClick={() => {}}
-        >
-          <ReceiptText className="size-5" />
-          Generate
-        </Button>
+        <GenerateReceiptButton borrowRecord={row.original}>
+          <Button
+            // variant="ghost"
+            size="sm"
+            className="gap-2 book-receipt_admin-btn"
+            onClick={() => {}}
+          >
+            <ReceiptText className="size-5" />
+            Generate
+          </Button>
+        </GenerateReceiptButton>
       </div>
     ),
   },
