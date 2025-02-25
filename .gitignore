@@ -44,3 +44,4 @@ yarn.lock
 package-lock.json
 *.ipynb
 /generated
+/prisma/raw-data
