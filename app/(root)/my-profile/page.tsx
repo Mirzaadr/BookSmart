@@ -14,6 +14,7 @@ const ProfilePage = async () => {
     await db.borrowRecord.findMany({
       where: {
         userId: session.user.id,
+        // status: "BORROWED",
       },
       include: {
         books: true,
