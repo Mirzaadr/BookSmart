@@ -63,8 +63,11 @@ model BorrowRecord {
 }
 
 enum BorrowStatus {
+  RESERVED
   BORROWED
   RETURNED
+  OVERDUE
+  CANCELLED
 
   @@map("borrow_status")
 }
@@ -80,6 +83,7 @@ enum Status {
   PENDING
   APPROVED
   REJECTED
+  BLOCKED
 
   @@map("status")
 }
